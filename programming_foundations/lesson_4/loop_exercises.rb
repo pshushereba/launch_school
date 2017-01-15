@@ -60,11 +60,20 @@
 #   count += 1
 # end
 
-numbers = [7, 9, 13, 25, 18]
-arr_pos = 0
-until arr_pos == numbers.last
-  p numbers[arr_pos]
-  arr_pos += 1 
-end
+# numbers = [7, 9, 13, 25, 18]
+# arr_pos = 0
+# until arr_pos == numbers.size
+#   puts numbers[arr_pos]
+#   arr_pos += 1 
+# end
 
+# for i in 1..100
+#   puts i if i.odd?
+# end
+
+# friends = ['Sarah', 'John', 'Hannah', 'Dave']
+
+# for i in friends
+#   puts "Hello, #{i}"
+# end
 
