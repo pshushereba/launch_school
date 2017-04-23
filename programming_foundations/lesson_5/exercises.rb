@@ -173,6 +173,8 @@ arr.select do |hsh|
 end
 
 
+# Exercise 16
+
 
 
 
