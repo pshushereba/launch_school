@@ -3,9 +3,23 @@ require 'pry'
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
+WINNGING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] + # rows
+                  [[1, 4, 7], [2, 5, 8], [3, 6, 9]] + # columns
+                  [[1, 5, 9], [3, 5, 7]] # diagonals
 
 def prompt(msg)
   puts "=> #{msg}"
+end
+
+def joinor(arr, delimeter = ', ', word = 'or')
+  case arr.size
+  when 0 then ''
+  when 1 then arr.first
+  when 2 then arr.join(" #{word}")
+  else
+    arr[-1] = "#{word} #{arr.last}"
+    arr.join(delimeter)
+  end
 end
 
 # rubocop:disable Metrics/MethodLength
@@ -41,7 +55,7 @@ end
 def player_places_piece!(brd)
   square = ''
   loop do
-    prompt "Choose a square (#{empty_squares(brd).join(', ')}):"
+    prompt "Choose a square #{joinor(empty_squares(brd), ', ')}:"
     square = gets.chomp.to_i
     break if empty_squares(brd).include?(square)
     prompt "Sorry, that's not a valid choice."
@@ -51,8 +65,25 @@ def player_places_piece!(brd)
 end
 
 def computer_places_piece!(brd)
-  square = empty_squares(brd).sample
-  brd[square] = COMPUTER_MARKER
+    square = nil
+
+    WINNGING_LINES.each do |line|
+      square = find_at_risk_squares(line, brd, PLAYER_MARKER)
+      break if square
+    end
+
+    if !square
+      WINNGING_LINES.each do |line|
+        square = find_at_risk_squares(line, brd, COMPUTER_MARKER)
+        break if square
+      end
+    end
+
+    if !square
+      square = empty_squares(brd).sample
+    end
+    
+    brd[square] = COMPUTER_MARKER
 end
 
 def board_full?(brd)
@@ -63,11 +94,16 @@ def someone_won?(brd)
   !!detect_winner(brd)
 end
 
+def find_at_risk_squares(line, board, marker)
+  if board.values_at(*line).count(marker) == 2
+    board.select { |k, v| line.include?(k) && v == INITIAL_MARKER }.keys.first
+  else
+    nil
+  end
+end
+
 def detect_winner(brd)
-  winning_lines = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] + # rows
-                  [[1, 4, 7], [2, 5, 8], [3, 6, 9]] + # columns
-                  [[1, 5, 9], [3, 5, 7]] # diagonals
-  winning_lines.each do |line|
+  WINNGING_LINES.each do |line|
     if brd[line[0]] == PLAYER_MARKER &&
        brd[line[1]] == PLAYER_MARKER &&
        brd[line[2]] == PLAYER_MARKER
