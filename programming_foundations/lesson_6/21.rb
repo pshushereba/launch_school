@@ -1,5 +1,6 @@
 SUITS = ['H', 'D', 'S', 'C']
 VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
+MAX_POINTS = 21
 
 def prompt(msg)
   puts "=> #{msg}"
@@ -38,9 +39,9 @@ def detect_result(dealer_cards, player_cards)
   player_total = total(player_cards)
   dealer_total = total(dealer_cards)
 
-  if player_total > 21
+  if player_total > MAX_POINTS
     :player_busted
-  elsif dealer_total > 21
+  elsif dealer_total > MAX_POINTS
     :dealer_busted
   elsif dealer_total < player_total
     :player
